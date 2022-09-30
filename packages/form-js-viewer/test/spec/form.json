@@ -38,7 +38,8 @@
     {
       "key": "approvedBy",
       "label": "Approved By",
-      "type": "textfield"
+      "type": "textfield",
+      "condition": "approved"
     },
     {
       "key": "product",
@@ -117,9 +118,15 @@
       ]
     },
     {
+      "key": "calc",
+      "label": "2 + 2 = ?",
+      "type": "number"
+    },
+    {
       "key": "submit",
       "label": "Submit",
-      "type": "button"
+      "type": "button",
+      "disabled": "calc = 4"
     },
     {
       "action": "reset",

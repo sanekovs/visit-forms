@@ -5,6 +5,7 @@ import { get } from 'min-dash';
 import { FormRenderContext } from '../context';
 
 import useService from '../hooks/useService';
+import { useCondition } from '../hooks/useCondition';
 
 import { findErrors } from '../../util';
 
@@ -32,6 +33,14 @@ export default function FormField(props) {
     Element
   } = useContext(FormRenderContext);
 
+  // check condition
+  const shouldDisplay = useCondition(field.condition, data);
+  const disabled = !useCondition(field.disabled, data) || properties.readOnly || false;
+
+  if (!shouldDisplay) {
+    return null;
+  }
+
   const FormFieldComponent = formFields.get(field.type);
 
   if (!FormFieldComponent) {
@@ -41,8 +50,6 @@ export default function FormField(props) {
   const value = get(data, _path);
 
   const fieldErrors = findErrors(errors, _path);
-
-  const disabled = properties.readOnly || field.disabled || false;
 
   return (
     <Element field={ field }>
