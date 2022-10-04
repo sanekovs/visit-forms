@@ -1,9 +1,9 @@
 import useService from './useService';
 
 export function useCondition(condition, data) {
-  const conditionChecker = useService('conditionChecker');
+  const conditionChecker = useService('conditionChecker', false);
 
-  if (!condition) {
+  if (!condition || !conditionChecker) {
     return true;
   }
 
