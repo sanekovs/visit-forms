@@ -7,7 +7,5 @@ export function useCondition(condition, data) {
     return true;
   }
 
-  console.log(condition);
-
   return conditionChecker.check(condition, data);
 }

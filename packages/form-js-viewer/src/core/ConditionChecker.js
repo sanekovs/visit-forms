@@ -10,10 +10,14 @@ export function ConditionChecker() {
    * @returns
    */
   this.check = function(condition, data) {
-    console.log('cond', condition);
-
     try {
       const result = unaryTest(condition, data);
+
+      console.log(`condition "${condition}" result: ${result}`);
+      if (result === null) {
+        return true;
+      }
+
       return result;
     } catch (error) {
       console.error('condition checker errror:', error);

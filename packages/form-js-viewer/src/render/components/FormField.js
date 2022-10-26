@@ -34,7 +34,7 @@ export default function FormField(props) {
   } = useContext(FormRenderContext);
 
   // check condition
-  const shouldDisplay = useCondition(field.condition, data);
+  const shouldDisplay = useCondition((field.condition || '').slice(1), data);
   const disabled = !useCondition(field.disabled, data) || properties.readOnly || false;
 
   if (!shouldDisplay) {
