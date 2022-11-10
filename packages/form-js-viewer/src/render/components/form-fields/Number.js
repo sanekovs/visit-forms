@@ -58,7 +58,7 @@ export default function Number(props) {
 
     const keypressIsNumeric = /^[0-9]$/i.test(e.key);
 
-    const keypressIsAllowedChar = keypressIsNumeric || isFirstDot || isFirstMinus;
+    const keypressIsAllowedChar = keypressIsNumeric || ((decimalDigits !== 0) && isFirstDot) || isFirstMinus;
 
     const validKeyInput = isNotCharacterPress || keypressIsAllowedChar;
 
@@ -68,28 +68,51 @@ export default function Number(props) {
   const onInput = (e) => {
 
     let newRawValue = e.target.value;
+    let newValue;
 
-    // Treat commas as dots
-    newRawValue = newRawValue.replace(',', '.');
-    let valueAsFloat = parseFloat(newRawValue);
-
-    // If some invalid values were pasted in, clear everything
-    if (isNaN(valueAsFloat)) {
+    const clearState = () => {
       setRawValueCache('');
       onChange({ field, value: null });
-      return;
-    }
+    };
 
-    // @ts-ignore
-    if (decimalDigits && (parseInt(valueAsFloat) !== valueAsFloat)) {
-      const [ integerPart, decimalPart ] = newRawValue.split('.');
-      newRawValue = integerPart + '.' + decimalPart.substring(0, decimalDigits);
-      valueAsFloat = parseFloat(newRawValue);
+    // Handle integers first
+    if (decimalDigits === 0) {
+
+      const valueAsInt = parseInt(newRawValue);
+
+      // If an invalid integer was pasted in, clear
+      if (isNaN(valueAsInt)) {
+        clearState();
+        return;
+      }
+
+      newValue = valueAsInt;
+
+    }
+    else {
+
+      // Treat commas as dots
+      newRawValue = newRawValue.replace(',', '.');
+      let valueAsFloat = parseFloat(newRawValue);
+
+      // If an invalid number was pasted in, clear
+      if (isNaN(valueAsFloat)) {
+        clearState();
+        return;
+      }
+
+      // @ts-ignore
+      if (decimalDigits && (parseInt(valueAsFloat) !== valueAsFloat)) {
+        const [ integerPart, decimalPart ] = newRawValue.split('.');
+        newRawValue = integerPart + '.' + decimalPart.substring(0, decimalDigits);
+        valueAsFloat = parseFloat(newRawValue);
+      }
+
+      newValue = valueAsFloat;
     }
 
     setRawValueCache(newRawValue);
-    onChange({ field, value: valueAsFloat });
-
+    onChange({ field, value: newValue });
   };
 
   const { formId } = useContext(FormContext);
