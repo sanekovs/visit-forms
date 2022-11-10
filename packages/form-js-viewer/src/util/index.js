@@ -83,10 +83,11 @@ export function getSchemaVariables(schema) {
       key,
       valuesKey,
       source,
+      textRef,
       type
     } = component;
 
-    if ([ 'text', 'button' ].includes(type)) {
+    if ([ 'button' ].includes(type)) {
       return variables;
     }
 
@@ -100,6 +101,10 @@ export function getSchemaVariables(schema) {
 
     if (source && !variables.includes(source)) {
       variables = [ ...variables, source ];
+    }
+
+    if (textRef && !variables.includes(textRef)) {
+      variables = [ ...variables, textRef ];
     }
 
     // todo(pinussilvestrus): extract variables defined in FEEL expressions

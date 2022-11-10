@@ -133,11 +133,11 @@ export default class Importer {
         _path,
         type,
         valuesKey,
-        source
+        source,
+        textRef
       } = formField;
 
       // get values defined via valuesKey
-
       if (valuesKey) {
         importedData = {
           ...importedData,
@@ -150,6 +150,14 @@ export default class Importer {
         importedData = {
           ...importedData,
           [ source ]: get(data, [ source ])
+        };
+      }
+
+      // get values defined via textRef
+      if (textRef) {
+        importedData = {
+          ...importedData,
+          [ textRef ]: get(data, [ textRef ])
         };
       }
 
