@@ -38,7 +38,7 @@ const types = [
     type: 'select'
   },
   {
-    label: 'Searchable select',
+    label: 'Search select',
     type: 'searchableselect'
   },
   {
