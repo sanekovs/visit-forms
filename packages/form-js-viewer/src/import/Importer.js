@@ -158,7 +158,8 @@ export default class Importer {
       // in a general manner
       [
         'readonly',
-        'label'
+        'label',
+        'condition'
       ].forEach(property => {
         if (formField[property]) {
           Object.keys(data).forEach(key => {
