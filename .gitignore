@@ -1,4 +1,5 @@
 dist
+!packages/form-js/dist
 coverage
 node_modules
 .vscode
