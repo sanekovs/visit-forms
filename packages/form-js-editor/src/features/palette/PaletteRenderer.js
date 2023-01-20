@@ -13,20 +13,23 @@ import {
 /**
  * @typedef { { parent: Element } } PaletteConfig
  * @typedef { import('../../core/EventBus').default } EventBus
+ * @typedef { import('../../types').Injector } Injector
  */
 
 /**
  * @param {PaletteConfig} paletteConfig
  * @param {EventBus} eventBus
+ * @param {Injector} injector
  */
 export default class PaletteRenderer {
 
-  constructor(paletteConfig, eventBus) {
+  constructor(paletteConfig, eventBus, injector) {
     const {
       parent
     } = paletteConfig || {};
 
     this._eventBus = eventBus;
+    this._injector = injector;
 
     this._container = domify('<div class="fjs-palette-container"></div>');
 
@@ -79,7 +82,7 @@ export default class PaletteRenderer {
 
   _render() {
     render(
-      <Palette />,
+      <Palette injector={ this._injector } />,
       this._container
     );
 
@@ -95,4 +98,4 @@ export default class PaletteRenderer {
   }
 }
 
-PaletteRenderer.$inject = [ 'config.palette', 'eventBus' ];
+PaletteRenderer.$inject = [ 'config.palette', 'eventBus', 'injector' ];

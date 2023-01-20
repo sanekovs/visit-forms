@@ -285,8 +285,15 @@
   flex-direction: column;
   justify-content: center;
   font-size: 11px;
+  align-items: center;
+  border: none;
+  font-family: inherit;
   color: var( --color-palette-field);
   background: var(--color-palette-field-background);
+}
+
+.fjs-palette-container .fjs-palette-field:focus {
+  outline: solid 1px var(--color-palette-search-border);
 }
 
 .fjs-palette-container .fjs-palette-field:nth-of-type(3n) {

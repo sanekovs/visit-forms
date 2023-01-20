@@ -42,6 +42,13 @@ export const PALETTE_GROUPS = [
 
 export default function Palette(props) {
 
+  const {
+    injector
+  } = props;
+
+  const modeling = injector.get('modeling', false);
+  const formEditor = injector.get('formEditor', false);
+
   const [ entries, setEntries ] = useState(PALETTE_ENTRIES);
 
   const [ searchTerm, setSearchTerm ] = useState('');
@@ -49,6 +56,19 @@ export default function Palette(props) {
   const inputRef = useRef();
 
   const groups = groupEntries(entries);
+
+  const onKeyDown = (event) => {
+    if (event.code === 'Enter') {
+
+      const { fieldType: type } = event.target.dataset;
+
+      const { schema } = formEditor._getState();
+
+      // add new form field to last position
+      // todo(pinussilvestrus): scroll into view?
+      modeling.addFormField({ type }, schema, schema.components.length);
+    }
+  };
 
   // filter entries on search change
   useEffect(() => {
@@ -109,7 +129,8 @@ export default function Palette(props) {
                   const Icon = iconsByType[type];
 
                   return (
-                    <div
+                    <button
+                      onKeyDown={ onKeyDown }
                       class="fjs-palette-field fjs-drag-copy fjs-no-drop"
                       data-field-type={ type }
                       title={ `Create a ${label} element` }
@@ -118,7 +139,7 @@ export default function Palette(props) {
                         Icon ? <Icon class="fjs-palette-field-icon" width="36" height="36" viewBox="0 0 54 54" /> : null
                       }
                       <span class="fjs-palette-field-text">{ label }</span>
-                    </div>
+                    </button>
                   );
                 })
               }
