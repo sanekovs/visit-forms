@@ -103,3 +103,4 @@ Checklist.label = 'Checklist';
 Checklist.keyed = true;
 Checklist.emptyValue = [];
 Checklist.sanitizeValue = sanitizeMultiSelectValue;
+Checklist.group = 'selection';

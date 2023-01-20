@@ -27,3 +27,4 @@ Button.create = function(options = {}) {
 Button.type = type;
 Button.label = 'Button';
 Button.keyed = true;
+Button.group = 'action';

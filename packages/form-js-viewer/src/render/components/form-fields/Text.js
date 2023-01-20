@@ -35,6 +35,8 @@ Text.create = function(options = {}) {
 
 Text.type = type;
 Text.keyed = false;
+Text.group = 'presentation';
+Text.label = 'Text view';
 
 
 // helper //////////////

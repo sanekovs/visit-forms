@@ -208,6 +208,7 @@ describe('Textarea', function() {
     // assume
     expect(Textarea.type).to.eql('textarea');
     expect(Textarea.label).to.eql('Text area');
+    expect(Textarea.group).to.eql('basic-input');
     expect(Textarea.keyed).to.be.true;
 
     // when
