@@ -1,6 +1,6 @@
 import Markup from 'preact-markup';
-
-import { useExpressionValue } from '../../hooks/useExpressionValue';
+import { useMemo } from 'preact/hooks';
+import { useTemplateEvaluation } from '../../hooks';
 
 import {
   formFieldClasses,
@@ -15,9 +15,9 @@ export default function Text(props) {
 
   const { text = '' } = field;
 
-  const textValue = useExpressionValue(text) || '';
+  const textValue = useTemplateEvaluation(text, { debug: true, strict: false });
 
-  const componentOverrides = disableLinks ? { 'a': DisabledLink } : {};
+  const componentOverrides = useMemo(() => disableLinks ? { 'a': DisabledLink } : {}, [ disableLinks ]);
 
   return <div class={ formFieldClasses(type) }>
     <Markup markup={ safeMarkdown(textValue) } components={ componentOverrides } trim={ false } />

@@ -1,6 +1,8 @@
 import Ids from 'ids';
 import { get, isString, set } from 'min-dash';
 
+import ExpressionLanguageModule from './features/expression-language';
+
 import core from './core';
 
 import { clone, createFormContainer, createInjector, pathStringify } from './util';
@@ -296,7 +298,7 @@ export default class Form {
   _createInjector(options, container) {
     const {
       additionalModules = [],
-      modules = []
+      modules = this._getModules()
     } = options;
 
     const config = {
@@ -370,6 +372,15 @@ export default class Form {
     };
 
     this._emit('changed', this._getState());
+  }
+
+  /**
+ * @internal
+ */
+  _getModules() {
+    return [
+      ExpressionLanguageModule
+    ];
   }
 
   /**

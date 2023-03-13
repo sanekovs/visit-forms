@@ -2,7 +2,7 @@ import { useContext } from 'preact/hooks';
 
 import { FormContext } from '../../context';
 
-import { useExpressionValue } from '../../hooks/useExpressionValue';
+import { useExpressionEvaluation } from '../../hooks';
 
 import {
   formFieldClasses,
@@ -26,8 +26,8 @@ export default function Image(props) {
     source
   } = field;
 
-  const safeSource = safeImageSource(useExpressionValue(source));
-  const altText = useExpressionValue(alt);
+  const safeSource = safeImageSource(useExpressionEvaluation(source));
+  const altText = useExpressionEvaluation(alt);
 
   const { formId } = useContext(FormContext);
 

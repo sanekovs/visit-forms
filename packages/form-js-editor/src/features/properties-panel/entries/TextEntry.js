@@ -2,7 +2,7 @@ import { get } from 'min-dash';
 
 import { useService, useVariables } from '../hooks';
 
-import { FeelersTemplatingEntry, isFeelersTemplatingEntryEdited } from '@bpmn-io/properties-panel';
+import { FeelTemplatingEntry, isFeelTemplatingEntryEdited } from '@bpmn-io/properties-panel';
 
 
 export default function TextEntry(props) {
@@ -25,7 +25,7 @@ export default function TextEntry(props) {
       component: Text,
       editField: editField,
       field: field,
-      isEdited: isFeelersTemplatingEntryEdited
+      isEdited: isFeelTemplatingEntryEdited
     }
   ];
 }
@@ -51,14 +51,13 @@ function Text(props) {
     return editField(field, path, value);
   };
 
-  return FeelersTemplatingEntry({
+  return FeelTemplatingEntry({
     debounce,
-    description: 'Use an Expression, Markdown or basic HTML to format.',
+    description: 'Use an Expression, a Template, or plain text.\nRenders Markdown and HTML.',
     element: field,
     getValue,
     id,
     label: 'Text',
-    rows: 10,
     setValue,
     variables
   });
