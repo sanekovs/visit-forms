@@ -205,11 +205,6 @@
   opacity: 1;
 }
 
-.fjs-container .fjs-form-field-label {
-  display: flex;
-  align-items: center;
-}
-
 .fjs-container .fjs-incollapsible-label {
   min-height: var(--line-height-label);
 }
@@ -223,6 +218,10 @@
 }
 
 .fjs-container .fjs-form-field-label {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
   color: var(--color-text-light);
 }
 

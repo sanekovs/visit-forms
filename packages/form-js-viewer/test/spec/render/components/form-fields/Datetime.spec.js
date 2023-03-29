@@ -7,6 +7,8 @@ import {
   expectNoViolations
 } from '../../../../TestHelper';
 
+import { WithFormContext } from './helper';
+
 let container;
 
 const spy = sinon.spy;
@@ -1038,19 +1040,22 @@ const datetimeField = {
 function createDatetime(options = {}) {
   const {
     disabled,
+    errors,
     field = dateField,
     value,
     onChange = () => {}
   } = options;
 
-  return render(
+  return render(WithFormContext(
     <Datetime
       disabled={ disabled }
+      errors={ errors }
       field={ field }
-      value={ value }
-      onChange={ onChange } />,
-    {
-      container: options.container || container.querySelector('.fjs-form')
-    }
-  );
+      onChange={ onChange }
+      value={ value } />,
+    options
+  ), {
+    container: options.container || container.querySelector('.fjs-form')
+  });
+
 }

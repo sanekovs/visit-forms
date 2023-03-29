@@ -212,6 +212,10 @@ export function WithPropertiesPanelContext(Component, services = {}) {
         return {
           isExpression: () => false
         };
+      } else if (type === 'templating') {
+        return {
+          isTemplate: () => false
+        };
       }
     }
   };

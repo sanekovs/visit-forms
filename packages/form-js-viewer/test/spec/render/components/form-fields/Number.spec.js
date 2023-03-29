@@ -10,6 +10,7 @@ import {
   createFormContainer,
   expectNoViolations
 } from '../../../../TestHelper';
+import { WithFormContext } from './helper';
 
 const spy = sinon.spy;
 
@@ -943,12 +944,13 @@ function createNumberField(options = {}) {
   } = options;
 
   return render(
-    <Number
-      disabled={ disabled }
-      errors={ errors }
-      field={ field }
-      onChange={ onChange }
-      value={ value } />,
+    WithFormContext(
+      <Number
+        disabled={ disabled }
+        errors={ errors }
+        field={ field }
+        onChange={ onChange }
+        value={ value } />),
     {
       container: options.container || container.querySelector('.fjs-form')
     }

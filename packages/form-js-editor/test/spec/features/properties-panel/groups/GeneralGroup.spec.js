@@ -108,7 +108,7 @@ describe('GeneralGroup', function() {
       const { container } = renderGeneralGroup({ field });
 
       // then
-      const labelInput = findInput('label', container);
+      const labelInput = findFeelers('label', container);
 
       expect(labelInput).to.not.exist;
     });
@@ -123,7 +123,7 @@ describe('GeneralGroup', function() {
       const { container } = renderGeneralGroup({ field });
 
       // then
-      const labelInput = findInput('label', container);
+      const labelInput = findFeelers('label', container);
 
       expect(labelInput).to.exist;
     });
@@ -136,9 +136,9 @@ describe('GeneralGroup', function() {
         const { container } = renderGeneralGroup({ field: { type: 'datetime', subtype: 'date' } });
 
         // then
-        const dateLabelInput = findInput('date-label', container);
+        const dateLabelInput = findFeelers('date-label', container);
         expect(dateLabelInput).to.exist;
-        const timeLabelInput = findInput('time-label', container);
+        const timeLabelInput = findFeelers('time-label', container);
         expect(timeLabelInput).to.not.exist;
       });
 
@@ -149,9 +149,9 @@ describe('GeneralGroup', function() {
         const { container } = renderGeneralGroup({ field: { type: 'datetime', subtype: 'time' } });
 
         // then
-        const dateLabelInput = findInput('date-label', container);
+        const dateLabelInput = findFeelers('date-label', container);
         expect(dateLabelInput).to.not.exist;
-        const timeLabelInput = findInput('time-label', container);
+        const timeLabelInput = findFeelers('time-label', container);
         expect(timeLabelInput).to.exist;
       });
 
@@ -162,9 +162,9 @@ describe('GeneralGroup', function() {
         const { container } = renderGeneralGroup({ field: { type: 'datetime', subtype: 'datetime' } });
 
         // then
-        const dateLabelInput = findInput('date-label', container);
+        const dateLabelInput = findFeelers('date-label', container);
         expect(dateLabelInput).to.exist;
-        const timeLabelInput = findInput('time-label', container);
+        const timeLabelInput = findFeelers('time-label', container);
         expect(timeLabelInput).to.exist;
       });
     });
@@ -183,7 +183,7 @@ describe('GeneralGroup', function() {
         const { container } = renderGeneralGroup({ field });
 
         // then
-        const labelInput = findInput('label', container);
+        const labelInput = findFeelers('label', container);
         expect(labelInput).to.exist;
       }
     });
@@ -201,7 +201,7 @@ describe('GeneralGroup', function() {
       // when
       const { container } = renderGeneralGroup({ field });
 
-      const labelInput = findInput('label', container);
+      const labelInput = findFeelers('label', container);
 
       // then
       expect(labelInput).to.exist;
