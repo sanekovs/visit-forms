@@ -9,6 +9,7 @@ import {
   createFormContainer,
   expectNoViolations
 } from '../../../../TestHelper';
+import { WithFormContext } from './helper';
 
 const spy = sinon.spy;
 
@@ -222,12 +223,13 @@ function createCheckbox(options = {}) {
   } = options;
 
   return render(
-    <Checkbox
-      disabled={ disabled }
-      errors={ errors }
-      field={ field }
-      onChange={ onChange }
-      value={ value } />,
+    WithFormContext(
+      <Checkbox
+        disabled={ disabled }
+        errors={ errors }
+        field={ field }
+        onChange={ onChange }
+        value={ value } />),
     {
       container: options.container || container.querySelector('.fjs-form')
     }

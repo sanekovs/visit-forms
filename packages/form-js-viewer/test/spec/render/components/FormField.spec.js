@@ -11,7 +11,7 @@ import FormField from 'src/render/components/FormField';
 
 import Textfield from 'src/render/components/form-fields/Textfield';
 
-import { FormContext } from 'src/render/context';
+import { WithFormContext } from './form-fields/helper';
 
 import { createFormContainer } from '../../../TestHelper';
 
@@ -311,57 +311,16 @@ describe('FormField', function() {
 
 function createFormField(options = {}) {
   const {
-    FormFieldComponent = Textfield,
     data = defaultData,
-    errors = {},
     field = defaultField,
-    initialData = {},
     onChange = () => {},
-    properties = {},
-    checkCondition = () => false
   } = options;
 
-  const formContext = {
-    getService(type, strict = true) {
-      if (type === 'formFields') {
-        return {
-          get(type) {
-            if (type === FormFieldComponent.type) {
-              return FormFieldComponent;
-            }
-          }
-        };
-      } else if (type === 'form') {
-        return {
-          _getState() {
-            return {
-              data,
-              errors,
-              initialData,
-              properties
-            };
-          }
-        };
-      } else if (type === 'conditionChecker') {
-        return checkCondition !== false ? {
-          applyConditions(data) {
-            return data;
-          },
-          check(...args) {
-            return checkCondition(...args);
-          }
-        } : undefined;
-      }
-    }
-  };
-
   return render(
-    <FormContext.Provider value={ formContext }>
-      <FormField field={ field } onChange={ onChange } />
-    </FormContext.Provider>
-    ,
+    WithFormContext(<FormField field={ field } onChange={ onChange } />, { ...options, data }),
     {
       container: options.container || container.querySelector('.fjs-form')
     }
   );
+
 }
