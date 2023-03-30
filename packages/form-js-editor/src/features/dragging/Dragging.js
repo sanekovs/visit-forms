@@ -200,12 +200,17 @@ export default class Dragging {
 
     const {
       container,
-      direction,
       mirrorContainer
     } = options || {};
 
-    const dragulaInstance = dragula({
-      direction,
+    let dragulaOptions = {
+      direction: function(el, target) {
+        if (isRow(target)) {
+          return 'horizontal';
+        }
+
+        return 'vertical';
+      },
       mirrorContainer,
       isContainer(el) {
         return container.some(cls => el.classList.contains(cls));
@@ -245,7 +250,9 @@ export default class Dragging {
       },
       slideFactorX: 10,
       slideFactorY: 5
-    });
+    };
+
+    const dragulaInstance = dragula(dragulaOptions);
 
     // bind life cycle events
     dragulaInstance.on('drag', (element, source) => {
