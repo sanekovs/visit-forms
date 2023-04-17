@@ -30,6 +30,8 @@ export default class FeelersTemplating {
     }
 
     const expressions = this._extractExpressionsWithDepth(template);
+
+    // defines special accessors, and the change(s) in depth they could imply (e.g. parent can be used to access the parent context (depth - 1) or a child variable named parent (depth + 1)
     const specialDepthAccessors = {
       parent: [ -1, 1 ],
       _parent_: [ -1 ],
@@ -67,6 +69,24 @@ export default class FeelersTemplating {
   }
 
 
+  /**
+ * @typedef {Object} ExpressionWithDepth
+ * @property {number} depth - The depth of the expression in the syntax tree.
+ * @property {string} expression - The extracted expression
+ */
+
+  /**
+ * Extracts all feel expressions in the template along with their depth in the syntax tree.
+ * The depth is incremented for child expressions of loops to account for context drilling.
+
+ * @name extractExpressionsWithDepth
+ * @param {string} template - A feelers template string.
+ * @returns {Array<ExpressionWithDepth>} An array of objects, each containing the depth and the extracted expression.
+ *
+ * @example
+ * const template = "Hello {{user}}, you have:{{#loop items}}\n- {{amount}} {{name}}{{/loop}}.";
+ * const extractedExpressions = _extractExpressionsWithDepth(template);
+ */
   _extractExpressionsWithDepth(template) {
 
     // build simplified feelers syntax tree
@@ -75,12 +95,10 @@ export default class FeelersTemplating {
 
     return (function _traverse(n, depth = 0) {
 
-      // detect all feel expressions in the tree
       if ([ 'Feel', 'FeelBlock' ].includes(n.name)) {
         return [ { depth, expression: n.content } ];
       }
 
-      // increment depth for loop expressions to account for context mapping
       if (n.name === 'LoopSpanner') {
         const loopExpression = n.children[0].content;
         const childResults = n.children.slice(1).reduce((acc, child) => {

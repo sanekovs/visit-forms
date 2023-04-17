@@ -48,51 +48,61 @@ export const getFlavouredFeelVariableNames = (feelString, feelFlavour, options =
  * @returns {string|null} The variable name at the specified index or null if index is out of bounds.
  */
 const _getVariableNameAtPathIndex = (root, index) => {
-  const parts = _deconstructPathExpression(root);
-  return parts[index] || null;
+  const accessors = _deconstructPathExpression(root);
+  return accessors[index] || null;
 };
 
 
 /**
- * Extracts variable names from a given node based on depth and special depth accessors.
+ * Extracts the variables which are required of the external context for a given path expression.
+ * This is done by traversing the path expression tree and keeping track of the current depth relative to the external context.
  *
- * @param {Object} node - The node to extract variable names from.
- * @param {number} initialDepth - The initial depth to start searching for variables.
- * @param {Object} specialDepthAccessors - An object containing special depth accessor mappings.
+ * @param {Object} node - The root node of the path expression tree.
+ * @param {number} initialDepth - The depth at which the root node is located in the outer context.
+ * @param {Object} specialDepthAccessors - Definitions of special keywords which represent more complex accesses of the outer context.
  * @returns {Set} - A set containing the extracted variable names.
  */
 const _smartExtractVariableNames = (node, initialDepth, specialDepthAccessors) => {
 
-  // double brackets are needed as set constructor unpacks the first layer of the array
-  let currentDepthInfos = new Set([ [ -999, initialDepth - 1 ] ]);
+  // depth info represents the previous (initialised as null) and current depth of the current accessor in the path expression
+  // we track multiple of these to account for the fact that a path expression may be ambiguous due to special keywords
+  let accessorDepthInfos = [ { previous: null, current: initialDepth - 1 } ];
   const extractedVariables = new Set();
-  const nodeParts = _deconstructPathExpression(node);
+  const nodeAccessors = _deconstructPathExpression(node);
 
-  for (let i = 0; i < nodeParts.length; i++) {
-    const currentPart = nodeParts[i];
+  for (let i = 0; i < nodeAccessors.length; i++) {
+    const currentAccessor = nodeAccessors[i];
 
-    if (currentPart in specialDepthAccessors) {
-      const depthOffsets = specialDepthAccessors[currentPart];
+    if (currentAccessor in specialDepthAccessors) {
+      const depthOffsets = specialDepthAccessors[currentAccessor];
 
-      currentDepthInfos = new Set(
-        depthOffsets.reduce((accumulator, offset) => {
-          return [
-            ...accumulator,
-            ...[ ...currentDepthInfos ].map(depthInfo => [ depthInfo[1], depthInfo[1] + offset ]),
-          ];
-        }, []).filter(depthInfo => depthInfo[1] >= -1)
-      );
+      // if the current accessor is a special keyword, we need to expand the current depth info set
+      // this is done to account for the ambiguity of keywords like parent, which may be used to access
+      // the parent of the current node, or a child variable of the same name
+      accessorDepthInfos = depthOffsets.reduce((accumulator, offset) => {
+        return [
+          ...accumulator,
+          ...accessorDepthInfos.map(depthInfo => ({ previous: depthInfo.current, current: depthInfo.current + offset })),
+        ];
+      }, []).filter(depthInfo => depthInfo.current >= -1); // discard all depth infos which are out of bounds
+
     } else {
-      currentDepthInfos = new Set([ ...currentDepthInfos ].map(depthInfo => [ depthInfo[1], depthInfo[1] + 1 ]));
+
+      // if the current accessor is not a special keyword, we know it's simply accessing a child
+      // hence we are now one level deeper in the tree and simply increment
+      accessorDepthInfos = accessorDepthInfos.map(depthInfo => ({ previous: depthInfo.current, current: depthInfo.current + 1 }));
     }
 
-    // if any child accesses from the root, we know the variable is required from the external context
-    if ([ ...currentDepthInfos ].some(depthInfo => depthInfo[0] === -1 && depthInfo[1] === 0)) {
-      extractedVariables.add(currentPart);
+    // finally, we check if for the current accessor, there is a scenario where:
+    // previous it was at depth -1 (i.e. the root context), and is now at depth 0 (i.e. a variable)
+    // these are the variables we need to request, so we add them to the set
+    if (accessorDepthInfos.some(depthInfo => depthInfo.previous === -1 && depthInfo.current === 0)) {
+      extractedVariables.add(currentAccessor);
     }
   }
 
-  return extractedVariables;
+  // we return a set to avoid duplicates
+  return new Set(extractedVariables);
 };
 
 
@@ -121,7 +131,14 @@ const _deconstructPathExpression = (root) => {
 };
 
 
-// Unpack the parse tree into a simple tree structure
+/**
+ * Builds a simplified feel structure tree from the given parse tree and feel string.
+ * The nodes follow this structure: `{ name: string, children: Array, variableName?: string }`
+ *
+ * @param {Object} parseTree - The parse tree generated by a parser.
+ * @param {string} feelString - The feel string used for parsing.
+ * @returns {Object} The simplified feel structure tree.
+ */
 const _buildSimpleFeelStructureTree = (parseTree, feelString) => {
 
   const stack = [ { children: [] } ];
