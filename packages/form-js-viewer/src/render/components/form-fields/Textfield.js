@@ -20,6 +20,7 @@ export default function Textfield(props) {
   const {
     disabled,
     errors = [],
+    onBlur,
     field,
     value = ''
   } = props;
@@ -59,6 +60,7 @@ export default function Textfield(props) {
         disabled={ disabled }
         id={ prefixId(id, formId) }
         onInput={ onChange }
+        onBlur={ onBlur }
         type="text"
         value={ value } />
     </InputAdorner>

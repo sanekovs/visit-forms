@@ -802,7 +802,8 @@ function createTaglist(options = {}) {
     disabled,
     errors,
     field = defaultField,
-    onChange,
+    onChange = () => {},
+    onBlur = () => {},
     value
   } = options;
 
@@ -812,6 +813,7 @@ function createTaglist(options = {}) {
       errors={ errors }
       field={ field }
       onChange={ onChange }
+      onBlur={ onBlur }
       value={ value } />,
     options
   ), {

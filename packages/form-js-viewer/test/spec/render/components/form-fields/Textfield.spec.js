@@ -302,7 +302,8 @@ function createTextfield(options = {}) {
     disabled,
     errors,
     field = defaultField,
-    onChange,
+    onChange = () => {},
+    onBlur = () => {},
     value
   } = options;
 
@@ -313,6 +314,7 @@ function createTextfield(options = {}) {
       errors={ errors }
       field={ field }
       onChange={ onChange }
+      onBlur={ onBlur }
       value={ value } />
   ), {
     container: options.container || container.querySelector('.fjs-form')

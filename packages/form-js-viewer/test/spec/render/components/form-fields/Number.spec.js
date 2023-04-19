@@ -938,7 +938,8 @@ function createNumberField(options = {}) {
     disabled,
     errors,
     field = defaultField,
-    onChange,
+    onChange = () => {},
+    onBlur = () => {},
     value
   } = options;
 
@@ -948,6 +949,7 @@ function createNumberField(options = {}) {
       errors={ errors }
       field={ field }
       onChange={ onChange }
+      onBlur={ onBlur }
       value={ value } />,
     {
       container: options.container || container.querySelector('.fjs-form')

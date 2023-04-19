@@ -24,6 +24,7 @@ export default function Taglist(props) {
   const {
     disabled,
     errors = [],
+    onBlur,
     field,
     value : values = []
   } = props;
@@ -170,7 +171,7 @@ export default function Taglist(props) {
         onKeyDown={ (e) => onInputKeyDown(e) }
         onMouseDown={ () => setIsEscapeClose(false) }
         onFocus={ () => setIsDropdownExpanded(true) }
-        onBlur={ () => { setIsDropdownExpanded(false); setFilter(''); } } />
+        onBlur={ () => { setIsDropdownExpanded(false); setFilter(''); onBlur(); } } />
     </div>
     <div class="fjs-taglist-anchor">
       { shouldDisplayDropdown && <DropdownList

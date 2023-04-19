@@ -1,4 +1,4 @@
-import { useContext } from 'preact/hooks';
+import { useCallback, useContext, useEffect, useMemo } from 'preact/hooks';
 
 import { get } from 'min-dash';
 
@@ -23,9 +23,11 @@ export default function FormField(props) {
   const { _path } = field;
 
   const formFields = useService('formFields'),
+        viewerCommands = useService('viewerCommands', false),
         form = useService('form');
 
   const {
+    initialData,
     data,
     errors,
     properties
@@ -43,11 +45,25 @@ export default function FormField(props) {
     throw new Error(`cannot render field <${field.type}>`);
   }
 
+  const initialValue = useMemo(() => get(initialData, _path), [ initialData, _path ]);
+
   const value = get(data, _path);
 
   const fieldErrors = findErrors(errors, _path);
 
   const disabled = properties.readOnly || field.disabled || false;
+
+  const onBlur = useCallback(() => {
+    if (viewerCommands) {
+      viewerCommands.updateFieldValidation(field, value);
+    }
+  }, [ viewerCommands, field, value ]);
+
+  useEffect(() => {
+    if (viewerCommands && initialValue) {
+      viewerCommands.updateFieldValidation(field, initialValue);
+    }
+  }, [ viewerCommands, field, initialValue ]);
 
   const hidden = useCondition(field.conditional && field.conditional.hide || null);
 
@@ -63,6 +79,7 @@ export default function FormField(props) {
           disabled={ disabled }
           errors={ fieldErrors }
           onChange={ disabled ? noop : onChange }
+          onBlur={ disabled ? noop : onBlur }
           value={ value } />
       </Element>
     </Column>

@@ -1040,7 +1040,8 @@ function createDatetime(options = {}) {
     disabled,
     field = dateField,
     value,
-    onChange = () => {}
+    onChange = () => {},
+    onBlur = () => {}
   } = options;
 
   return render(
@@ -1048,6 +1049,7 @@ function createDatetime(options = {}) {
       disabled={ disabled }
       field={ field }
       value={ value }
+      onBlur={ onBlur }
       onChange={ onChange } />,
     {
       container: options.container || container.querySelector('.fjs-form')

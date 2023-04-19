@@ -19,6 +19,7 @@ export default function Textarea(props) {
   const {
     disabled,
     errors = [],
+    onBlur,
     field,
     value = ''
   } = props;
@@ -80,6 +81,7 @@ export default function Textarea(props) {
       disabled={ disabled }
       id={ prefixId(id, formId) }
       onInput={ onInput }
+      onBlur={ onBlur }
       value={ value }
       ref={ textareaRef } />
     <Description description={ description } />

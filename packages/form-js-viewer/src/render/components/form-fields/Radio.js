@@ -1,4 +1,4 @@
-import { useContext } from 'preact/hooks';
+import { useContext, useRef } from 'preact/hooks';
 import useValuesAsync, { LOAD_STATES } from '../../hooks/useValuesAsync';
 import classNames from 'classnames';
 import { FormContext } from '../../context';
@@ -20,6 +20,7 @@ export default function Radio(props) {
   const {
     disabled,
     errors = [],
+    onBlur,
     field,
     value
   } = props;
@@ -31,6 +32,8 @@ export default function Radio(props) {
     validate = {}
   } = field;
 
+  const outerDivRef = useRef();
+
   const { required } = validate;
 
   const onChange = (v) => {
@@ -40,6 +43,15 @@ export default function Radio(props) {
     });
   };
 
+  const onRadioBlur = (e) => {
+
+    if (outerDivRef.current.contains(e.relatedTarget)) {
+      return;
+    }
+
+    onBlur();
+  };
+
   const {
     state: loadState,
     values: options
@@ -47,7 +59,7 @@ export default function Radio(props) {
 
   const { formId } = useContext(FormContext);
 
-  return <div class={ formFieldClasses(type, { errors, disabled }) }>
+  return <div class={ formFieldClasses(type, { errors, disabled }) } ref={ outerDivRef }>
     <Label
       label={ label }
       required={ required } />
@@ -66,6 +78,7 @@ export default function Radio(props) {
               disabled={ disabled }
               id={ prefixId(`${ id }-${ index }`, formId) }
               type="radio"
+              onBlur={ onRadioBlur }
               onClick={ () => onChange(option.value) } />
           </Label>
         );

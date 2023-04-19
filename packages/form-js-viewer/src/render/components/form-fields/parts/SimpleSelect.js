@@ -21,6 +21,7 @@ export default function SimpleSelect(props) {
     id,
     disabled,
     errors,
+    onBlur,
     field,
     value
   } = props;
@@ -72,7 +73,7 @@ export default function SimpleSelect(props) {
       id={ prefixId(`${id}`, formId) }
       class={ classNames('fjs-input-group', { 'disabled': disabled }, { 'hasErrors': errors.length }) }
       onFocus={ () => setIsDropdownExpanded(true) }
-      onBlur={ () => setIsDropdownExpanded(false) }
+      onBlur={ () => { setIsDropdownExpanded(false); onBlur(); } }
       onMouseDown={ (e) => onMouseDown(e) }
       tabIndex={ disabled ? undefined : 0 }>
       <div class={ classNames('fjs-select-display', { 'fjs-select-placeholder' : !value }) } id={ prefixId(`${id}-display`, formId) }>{ valueLabel || 'Select' }</div>

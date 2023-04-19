@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState, useEffect } from 'preact/hooks';
+import { useCallback, useContext, useMemo, useState, useEffect, useRef } from 'preact/hooks';
 
 import classNames from 'classnames';
 
@@ -23,6 +23,7 @@ export default function Datetime(props) {
   const {
     disabled,
     errors = [],
+    onBlur,
     field,
     onChange,
     value = ''
@@ -43,6 +44,7 @@ export default function Datetime(props) {
 
   const { required } = validate;
   const { formId } = useContext(FormContext);
+  const dateTimeGroupRef = useRef();
 
   const getNullDateTime = () => ({ date: new Date(Date.parse(null)), time: null });
 
@@ -54,6 +56,14 @@ export default function Datetime(props) {
 
   const useDatePicker = useMemo(() => subtype === DATETIME_SUBTYPES.DATE || subtype === DATETIME_SUBTYPES.DATETIME, [ subtype ]);
   const useTimePicker = useMemo(() => subtype === DATETIME_SUBTYPES.TIME || subtype === DATETIME_SUBTYPES.DATETIME, [ subtype ]);
+
+  const onDateTimeBlur = useCallback((e) => {
+    if (e.relatedTarget && dateTimeGroupRef.current.contains(e.relatedTarget)) {
+      return;
+    }
+
+    onBlur();
+  }, [ onBlur ]);
 
   useEffect(() => {
 
@@ -132,6 +142,7 @@ export default function Datetime(props) {
     id,
     label: dateLabel,
     collapseLabelOnEmpty: !timeLabel,
+    onDateTimeBlur,
     formId,
     required,
     disabled,
@@ -144,6 +155,7 @@ export default function Datetime(props) {
     id,
     label: timeLabel,
     collapseLabelOnEmpty: !dateLabel,
+    onDateTimeBlur,
     formId,
     required,
     disabled,
@@ -154,7 +166,7 @@ export default function Datetime(props) {
   };
 
   return <div class={ formFieldClasses(type, { errors: allErrors, disabled }) }>
-    <div class={ classNames('fjs-vertical-group') }>
+    <div class={ classNames('fjs-vertical-group') } ref={ dateTimeGroupRef }>
       { useDatePicker && <Datepicker { ...datePickerProps } /> }
       { useTimePicker && useDatePicker && <div class="fjs-datetime-separator" /> }
       { useTimePicker && <Timepicker { ...timePickerProps } /> }

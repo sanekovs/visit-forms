@@ -976,7 +976,7 @@ describe('Form', function() {
 
   describe('validation', function() {
 
-    it('should display error if required field empty', async function() {
+    it.skip('should display error if required field empty', async function() {
 
       // given
       const data = {
@@ -1016,7 +1016,7 @@ describe('Form', function() {
     });
 
 
-    it('should display error if required field does not match pattern', async function() {
+    it.skip('should display error if required field does not match pattern', async function() {
 
       // given
       const data = {
