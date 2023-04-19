@@ -76,14 +76,27 @@ export function clone(data, replacer) {
   return JSON.parse(JSON.stringify(data, replacer));
 }
 
+
 /**
  * Parse the schema for input variables a form might make use of
  *
+ * @typedef {object} ExpressionLanguage
+ * @typedef {object} Templating
  * @param {any} schema
+ * @param {object} options
+ * @param {ExpressionLanguage} [options.expressionLanguage]
+ * @param {Templating} [options.templating]
+ * @param {'both'|'input'|'output'} [options.direction]
  *
  * @return {string[]}
  */
-export function getSchemaVariables(schema, expressionLanguage = new FeelExpressionLanguage(null), templating = new FeelersTemplating()) {
+export function getSchemaVariables(schema, options = {}) {
+
+  const {
+    expressionLanguage = new FeelExpressionLanguage(null),
+    templating = new FeelersTemplating(),
+    direction = 'both'
+  } = options;
 
   if (!schema.components) {
     return [];
@@ -106,38 +119,42 @@ export function getSchemaVariables(schema, expressionLanguage = new FeelExpressi
       variables = [ ...variables, key ];
     }
 
-    if (valuesKey) {
-      variables = [ ...variables, valuesKey ];
-    }
+    if (direction === 'input' || direction === 'both') {
 
-    if (conditional && conditional.hide) {
-
-      const conditionVariables = expressionLanguage.getVariableNames(conditional.hide, { type: 'unaryTest' });
-
-      variables = [ ...variables, ...conditionVariables ];
-    }
-
-    EXPRESSION_PROPERTIES.forEach((prop) => {
-      const property = component[prop];
-
-      if (property && expressionLanguage.isExpression(property)) {
-
-        const expressionVariables = expressionLanguage.getVariableNames(property, { type: 'expression' });
-
-        variables = [ ...variables, ...expressionVariables ];
+      if (valuesKey) {
+        variables = [ ...variables, valuesKey ];
       }
-    });
 
-    TEMPLATE_PROPERTIES.forEach((prop) => {
-      const property = component[prop];
+      if (conditional && conditional.hide) {
 
-      if (property && !expressionLanguage.isExpression(property) && templating.isTemplate(property)) {
+        const conditionVariables = expressionLanguage.getVariableNames(conditional.hide, { type: 'unaryTest' });
 
-        const templateVariables = templating.getVariableNames(property);
-
-        variables = [ ...variables, ...templateVariables ];
+        variables = [ ...variables, ...conditionVariables ];
       }
-    });
+
+      EXPRESSION_PROPERTIES.forEach((prop) => {
+        const property = component[prop];
+
+        if (property && expressionLanguage.isExpression(property)) {
+
+          const expressionVariables = expressionLanguage.getVariableNames(property, { type: 'expression' });
+
+          variables = [ ...variables, ...expressionVariables ];
+        }
+      });
+
+      TEMPLATE_PROPERTIES.forEach((prop) => {
+        const property = component[prop];
+
+        if (property && !expressionLanguage.isExpression(property) && templating.isTemplate(property)) {
+
+          const templateVariables = templating.getVariableNames(property);
+
+          variables = [ ...variables, ...templateVariables ];
+        }
+      });
+
+    }
 
     return variables;
   }, []);
