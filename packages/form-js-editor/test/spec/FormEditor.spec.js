@@ -578,7 +578,7 @@ describe('FormEditor', function() {
       });
 
       // when
-      const paletteContainer = domQuery('.fjs-editor-palette-container', container);
+      const paletteContainer = domQuery('.fjs-palette-container', container);
 
       // then
       expect(paletteContainer).to.exist;
@@ -603,7 +603,6 @@ describe('FormEditor', function() {
       const paletteContainer = domQuery('.fjs-palette-container', paletteParent);
 
       // then
-      expect(domQuery('.fjs-editor-palette-container', container)).to.not.exist;
       expect(paletteContainer).to.exist;
 
       document.body.removeChild(paletteParent);
