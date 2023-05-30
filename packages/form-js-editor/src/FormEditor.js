@@ -13,6 +13,7 @@ import PaletteModule from './features/palette';
 import PropertiesPanelModule from './features/properties-panel';
 import RenderInjectionModule from './features/render-injection';
 import ExpressionLanguageModule from './features/expression-language';
+import FormGenerationUiModule from './features/form-generation-ui';
 
 import { MarkdownModule } from '@bpmn-io/form-js-viewer';
 
@@ -307,6 +308,7 @@ export default class FormEditor {
       SelectionModule,
       PaletteModule,
       ExpressionLanguageModule,
+      FormGenerationUiModule,
       MarkdownModule,
       PropertiesPanelModule,
       RenderInjectionModule
