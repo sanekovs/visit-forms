@@ -15,6 +15,7 @@ import SlotContext from './SlotContext';
 export default (props) => {
   const {
     name,
+    fillRoot = FillFragment,
     groupFn = _groupByGroupName,
     separatorFn = (key) => null,
     limit
@@ -29,8 +30,8 @@ export default (props) => {
   const groups = useMemo(() => groupFn(cropped), [ cropped , groupFn ]);
 
   const fillsAndSeparators = useMemo(() => {
-    return buildFills(groups, FillFragment, separatorFn);
-  }, [ groups, separatorFn ]);
+    return buildFills(groups, fillRoot, separatorFn);
+  }, [ groups, fillRoot, separatorFn ]);
 
   return fillsAndSeparators;
 };
